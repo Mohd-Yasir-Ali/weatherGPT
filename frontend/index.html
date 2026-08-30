@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WeatherGPT</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1>WeatherGPT</h1>
+            <p>Your AI-powered weather assistant</p>
+        </header>
+
+
+        <section class="search-section">
+
+            <input
+                type="text"
+                id="cityInput"
+                placeholder="Enter city name"
+            >
+
+            <button onclick="getWeather()">
+                Search
+            </button>
+
+        </section>
+
+
+        <section id="loading" class="hidden">
+            <p>Loading weather information...</p>
+        </section>
+
+
+        <section id="weatherSection" class="hidden">
+
+            <div class="current-weather">
+
+                <h2 id="cityName">City</h2>
+
+                <div class="temperature">
+                    <span id="temperature">--</span>°C
+                </div>
+
+                <p id="weatherCondition">
+                    Weather condition
+                </p>
+
+                <div class="weather-details">
+
+                    <div>
+                        <strong>Humidity</strong>
+                        <p id="humidity">--</p>
+                    </div>
+
+                    <div>
+                        <strong>Wind</strong>
+                        <p id="windSpeed">--</p>
+                    </div>
+
+                    <div>
+                        <strong>Rain Probability</strong>
+                        <p id="rainProbability">--</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="forecast-section">
+
+                <h2>7-Day Forecast</h2>
+
+                <div id="forecastContainer"></div>
+
+            </div>
+
+
+            <div class="alerts-section">
+
+                <h2>Weather Alerts</h2>
+
+                <div id="alertsContainer">
+                    No alerts.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section id="errorSection" class="hidden">
+
+            <p id="errorMessage"></p>
+
+        </section>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
