@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from weather_service import get_weather, get_forecast,get_alerts
+from weather_service import (
+    get_weather,
+    get_forecast,
+    get_alerts,
+    get_complete_weather
+)
 
 
 # Create the FastAPI application
@@ -68,3 +73,17 @@ def alerts(city: str):
         }
 
     return alert_data
+
+# Complete WeatherGPT endpoint
+@app.get("/weather-data")
+def weather_data(city: str):
+
+    complete_data = get_complete_weather(city)
+
+    if complete_data is None:
+
+        return {
+            "error": "Unable to get weather data"
+        }
+
+    return complete_data

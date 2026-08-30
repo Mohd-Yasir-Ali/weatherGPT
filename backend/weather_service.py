@@ -73,15 +73,23 @@ def get_weather_data(city):
 
     try:
 
+        import time
+
+        start = time.time()
+
         response = requests.get(
             weather_url,
             params=parameters,
             timeout=10
         )
 
+        print("Open-Meteo request time:", time.time() - start)
+
         response.raise_for_status()
 
         weather_data = response.json()
+
+        print("Total weather data time:", time.time() - start)
 
     except requests.exceptions.RequestException:
         return None
@@ -297,4 +305,184 @@ def get_alerts(city):
         "city": city,
 
         "alerts": alerts
+    }
+# ---------------------------------------
+# Complete WeatherGPT data
+# ---------------------------------------
+
+def get_complete_weather(city):
+
+    # Get weather data only once
+    weather_data = get_weather_data(city)
+
+    if weather_data is None:
+        return None
+
+    current_weather = weather_data["current"]
+    daily_weather = weather_data["daily"]
+
+    # ---------------------------------------
+    # Current weather
+    # ---------------------------------------
+
+    weather_code = current_weather["weather_code"]
+
+    weather_information = {
+
+        "city": city,
+
+        "temperature":
+            current_weather["temperature_2m"],
+
+        "humidity":
+            current_weather["relative_humidity_2m"],
+
+        "wind_speed":
+            current_weather["wind_speed_10m"],
+
+        "weather_condition":
+            get_weather_condition(weather_code),
+
+        "maximum_temperature":
+            daily_weather["temperature_2m_max"][0],
+
+        "minimum_temperature":
+            daily_weather["temperature_2m_min"][0],
+
+        "rain_probability":
+            daily_weather["precipitation_probability_max"][0]
+    }
+
+
+    # ---------------------------------------
+    # 7-Day forecast
+    # ---------------------------------------
+
+    dates = daily_weather["time"]
+
+    maximum_temperatures = \
+        daily_weather["temperature_2m_max"]
+
+    minimum_temperatures = \
+        daily_weather["temperature_2m_min"]
+
+    rain_probabilities = \
+        daily_weather["precipitation_probability_max"]
+
+    weather_codes = \
+        daily_weather["weather_code"]
+
+    wind_speeds = \
+        daily_weather["wind_speed_10m_max"]
+
+
+    forecast = []
+
+    for i in range(len(dates)):
+
+        day_information = {
+
+            "date": dates[i],
+
+            "maximum_temperature":
+                maximum_temperatures[i],
+
+            "minimum_temperature":
+                minimum_temperatures[i],
+
+            "rain_probability":
+                rain_probabilities[i],
+
+            "weather_condition":
+                get_weather_condition(weather_codes[i])
+        }
+
+        forecast.append(day_information)
+
+
+    # ---------------------------------------
+    # Weather alerts
+    # ---------------------------------------
+
+    alerts = []
+
+    for i in range(len(dates)):
+
+        weather_code = weather_codes[i]
+
+        rain_probability = rain_probabilities[i]
+
+        wind_speed = wind_speeds[i]
+
+
+        # Thunderstorm
+        if weather_code in [95, 96, 99]:
+
+            alerts.append({
+
+                "date": dates[i],
+
+                "type": "Thunderstorm",
+
+                "severity": "High",
+
+                "message":
+                    "Thunderstorm conditions may occur."
+            })
+
+
+        # Heavy rain
+        elif weather_code in [65, 67, 82] or \
+                rain_probability >= 80:
+
+            alerts.append({
+
+                "date": dates[i],
+
+                "type": "Heavy Rain",
+
+                "severity": "Medium",
+
+                "message":
+                    "High probability of heavy rain."
+            })
+
+
+        # Strong wind
+        elif wind_speed >= 50:
+
+            alerts.append({
+
+                "date": dates[i],
+
+                "type": "Strong Wind",
+
+                "severity": "Medium",
+
+                "message":
+                    "Strong winds may occur."
+            })
+
+
+    # ---------------------------------------
+    # Return everything
+    # ---------------------------------------
+
+    return {
+
+        "weather": weather_information,
+
+        "forecast": {
+
+            "city": city,
+
+            "forecast": forecast
+        },
+
+        "alerts": {
+
+            "city": city,
+
+            "alerts": alerts
+        }
     }
