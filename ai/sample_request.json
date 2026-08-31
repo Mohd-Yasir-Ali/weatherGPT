@@ -1,0 +1,11 @@
+{
+  "weather_data": {
+    "city": "Lucknow",
+    "temperature_c": 31,
+    "humidity_percent": 72,
+    "condition": "Cloudy",
+    "rain_probability_percent": 60,
+    "wind_speed_kmh": 15
+  },
+  "question": "Will I need an umbrella today?"
+}

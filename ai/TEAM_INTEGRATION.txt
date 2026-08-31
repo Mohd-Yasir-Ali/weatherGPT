@@ -1,0 +1,19 @@
+MESSAGE TO MEMBER 1:
+
+I have completed the Member 3 AI module.
+
+Please send me:
+1. Exact weather endpoint.
+2. Exact JSON response format.
+3. All available weather fields.
+4. How the frontend sends the user's question.
+5. Whether the AI function should be imported directly into the main FastAPI app.
+
+I will connect the AI using:
+
+from ai_service import generate_weather_answer
+
+answer = generate_weather_answer(weather_data, user_question)
+
+IMPORTANT:
+I need the exact backend JSON field names before changing the integration code.
